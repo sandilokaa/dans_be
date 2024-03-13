@@ -23,12 +23,14 @@ class JobRepository {
 
             const startIndex = (page - 1) * limit;
             const endIndex = startIndex + limit;
+            const totalPages = (Math.ceil(filteredJobList.length / limit));
             filteredJobList = filteredJobList.slice(startIndex, endIndex);
 
             return {
                 totalItems: filteredJobList.length,
-                totalPages: Math.ceil(getjobList.length / limit),
+                totalPages: totalPages,
                 currentPage: page,
+                limit: limit,
                 jobs: filteredJobList
             }
             
