@@ -5,12 +5,14 @@ const jobService = require("../services/jobService");
 
 const handleGetJobList = async ( req, res, next ) => {
 
-    const { description, location, full_time } = req.query;
+    const { description, location, full_time, page, limit } = req.query;
 
     const { status, status_code, message, data} = await jobService.handleGetJobList({
         description,
         location,
-        full_time
+        full_time,
+        page,
+        limit
     });
 
     res.status(status_code).send({

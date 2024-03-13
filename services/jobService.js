@@ -4,11 +4,11 @@ class JobService {
 
     /* ------------- Handle Get Job List ------------- */
 
-    static async handleGetJobList({ description, location, full_time }) {
+    static async handleGetJobList({ description, location, full_time, page, limit }) {
 
         try {
 
-            const getedJobList = await jobRepository.handleGetJobList({ description, location, full_time });
+            const getedJobList = await jobRepository.handleGetJobList({ description, location, full_time, page, limit });
 
             return {
                 status: true,

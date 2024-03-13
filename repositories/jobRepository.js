@@ -4,17 +4,15 @@ class JobRepository {
 
     /* ------------- Handle Get Job List ------------- */
 
-    static async handleGetJobList({ description, location, full_time = true, page = 1, itemsPerPage = 5 }) {
+    static async handleGetJobList({ description, location, page = 1, limit = 5 }) {
 
         try {
 
-            const pageParams = `?page=${page}&itemsPerPage=${itemsPerPage}&full_time=${full_time}`
-
-            const getResponseJobList = await axios.get(`https://dev6.dansmultipro.com/api/recruitment/positions.json${pageParams}`);
+            const getResponseJobList = await axios.get(`https://dev6.dansmultipro.com/api/recruitment/positions.json`);
 
             const getjobList = getResponseJobList.data;
 
-            const filteredJobList = getjobList.filter(job => {
+            let filteredJobList = getjobList.filter(job => {
 
                 const isDescriptionMatch = !description || job.description.toLowerCase().includes(description.toLowerCase());
                 
@@ -23,7 +21,16 @@ class JobRepository {
                 return isDescriptionMatch && isLocationMatch;
             });
 
-            return filteredJobList;
+            const startIndex = (page - 1) * limit;
+            const endIndex = startIndex + limit;
+            filteredJobList = filteredJobList.slice(startIndex, endIndex);
+
+            return {
+                totalItems: filteredJobList.length,
+                totalPages: Math.ceil(getjobList.length / limit),
+                currentPage: page,
+                jobs: filteredJobList
+            }
             
         } catch (err) {
 
